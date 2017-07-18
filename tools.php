@@ -1,8 +1,11 @@
 <?php
 class tools
 {
-    function connect_db($dns, $user, $pass)
+    function connect_db()
     {
+        $dns = "mysql:host=localhost;dbname=RUSH;port=3306";
+        $user = "root";
+        $pass = "olibaba972";
         try
             {
                 $pdo = new PDO($dns, $user, $pass);
@@ -20,6 +23,13 @@ class tools
         $pdoStatement = $pdo->prepare($query);
         $pdoStatement->execute();
         $res = $pdoStatement->fetch();
+        return ($res);
+    }
+    function _query_all($pdo, $query)
+    {
+        $pdoStatement = $pdo->prepare($query);
+        $pdoStatement->execute();
+        $res = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
         return ($res);
     }
 }

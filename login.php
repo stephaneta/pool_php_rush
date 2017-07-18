@@ -9,17 +9,13 @@ include_once("user.php");
 session_start();
 $messageErr = "";
 $erreur= 0;
-$dns = "mysql:host=localhost;dbname=RUSH;port=3306";
-$user = "root";
-$pass = "olibaba972";
-
 
 if (isset($_POST["inscription"]))
     header('Location: http://coding_academy.com/pool_php_rush/inscription.php');
 
 if (isset($_POST["login"]))
     {        
-        $log = user::login($dns, $user, $pass, $_POST["email"], $_POST["password"]);
+        $log = user::login($_POST["email"], $_POST["password"]);
         if ($log == 0)
             header('Location: http://coding_academy.com/pool_php_rush/index.php');
         else
@@ -43,7 +39,6 @@ if ((!isset($_POST["email"])) || ($erreur == 1))
         </form>        
 <?php
     }
-    //$query = 'SELECT COUNT(email) FROM users WHERE email="'.$email.'" AND password="'.$pass.'"';
 ?>
 
 </body>

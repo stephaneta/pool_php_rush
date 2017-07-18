@@ -1,11 +1,13 @@
+<link rel="stylesheet" TYPE="text/css" href="style.css">
+
 <?php
 include_once("tools.php");
 class user
 {
-    function login($dns, $user, $pass, $log_email, $log_pass)
+    function login($log_email, $log_pass)
     {
         $erreur = 0;
-        $pdo = tools::connect_db($dns, $user, $pass);
+        $pdo = tools::connect_db();
         $query_pass = 'SELECT password FROM users WHERE email="'.$log_email.'"';
         $res = tools::_query($pdo, $query_pass);
         $pass = password_verify($log_pass, $res["password"]);
@@ -78,5 +80,69 @@ class user
         tools::_query($pdo, $query_insert);
         $_SESSION["name"] = $_POST["name"];
     }
+    function get_user()
+    {
+        $query_get = ('SELECT id, username, email, password, is_admin FROM users');
+        $pdo = tools::connect_db();
+        $res = tools::_query_all($pdo, $query_get);
+        foreach ($res as $value)
+            {
+                echo "<table><tr><td> user: </td><td>".$value["username"]. "</td><td>email: </td><td>".$value["email"]."</td><td> admin_right:</td><td>".$value["is_admin"]."</td>
+<td><a href='http://coding_academy.com/pool_php_rush/update_user.php?id=".$value["id"]."'>Update</a></td>
+<td><a href='http://coding_academy.com/pool_php_rush/delete_user.php?id=".$value["id"]."'>Delete</a></td>
+</tr></table>";
+            }
+    }
+    function add_user($pdo)
+    {
+        $new_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $query_set = ('INSERT INTO users (username, email, password, created_at, is_admin) VALUES ("'. $_POST["name"].'", "'.$_POST["email"].'","'.$new_password.'", NOW(),"'.$_POST["admin"].'")');
+        tools::_query($pdo, $query_set); 
+    }
+    function update_user($pdo)
+    {
+        $id = substr_replace($_POST["id"], "", -1);
+        $new_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $query_update = ('UPDATE users SET username="'.$_POST["name"].'", email="'.$_POST["email"].'", password="'.$new_password.'", created_at=NOW(), is_admin='.$_POST["admin"].' WHERE id='.$id);
+        tools::_query($pdo, $query_update);    
+    }
+    function delete_user($pdo)
+    {
+        $query_delete = ('DELETE FROM users WHERE id='.$_GET["id"]);
+        tools::_query($pdo, $query_delete);
+    }
+    function get_product()
+    {
+        $query_get = ('SELECT id, name, description, price, user_id, category_id FROM products');
+        $pdo = tools::connect_db();
+        $res = tools::_query_all($pdo, $query_get);
+        
+        foreach ($res as $value)
+            {
+                echo "<table><tr><td> name: </td><td>".$value["name"]. "</td><td>price: </td><td>".$value["price"]."</td><td> description:</td><td>".$value["description"]."</td>
+<td><a href='http://coding_academy.com/pool_php_rush/update_product.php?id=".$value["id"]."'>Update</a></td>
+<td><a href='http://coding_academy.com/pool_php_rush/delete_product.php?id=".$value["id"]."'>Delete</a></td>
+</tr></table>";
+            }
+    }
+
+    
+    function add_product($pdo)
+    {
+        $query_set = ('INSERT INTO products (name, price) VALUES ("'. $_POST["name"].'", "'.$_POST["price"].'"');
+        var_dump(tools::_query($pdo, $query_set)); 
+    }
+
+     function update_product($pdo)
+    {
+        /* $id = substr_replace($_POST["id"], "", -1); */
+        /* $new_password = password_hash($_POST["password"], PASSWORD_DEFAULT); */
+        $query_update = ('UPDATE product SET name="'.$_POST["name"].'", price="'.$_POST["price"].'", description="'.$_POST["description"].'" WHERE id='.$_POST["id"]);
+        tools::_query($pdo, $query_update);    
+    }
+    function delete_product($pdo)
+    {
+        $query_delete = ('DELETE FROM products WHERE id='.$_GET["id"]);
+        tools::_query($pdo, $query_delete);
+    }
 }
-?>
