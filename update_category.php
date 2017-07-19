@@ -1,6 +1,7 @@
 <?php
-include_once("product.php");
+include_once("category.php");
 session_start();
+
 if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"] == 0)
     {
         header("Location: http://coding_academy.com/pool_php_rush/index.php");
@@ -9,19 +10,17 @@ if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"] == 0)
 
 $pdo = tools::connect_db();
 
-echo "upadte product's detail.<br>";
+echo "update category detail's.<br>";
 
 if (isset($_POST["name"]))
     {
-        product::update_product($pdo);
+        category::update_category($pdo);
         header('Location: http://coding_academy.com/pool_php_rush/admin.php');
     }
 
 ?>
- <form action="update_product.php" method="post">
-        <p>nom : <input type="text" name="name"/></p>
-        <p>prix : <input type="number" name="price" /></p>
-        <p>description : <input type="text" name="description"/></p>
+ <form method="post">
+        <p>category : <input type="text" name="name"/></p>
         <p><input type="hidden" name="id" value=<?php echo $_GET["id"];?>/></p>
         <p><input type="submit" value="OK" ></p>
         </form>

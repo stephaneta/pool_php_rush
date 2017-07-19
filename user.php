@@ -13,9 +13,10 @@ class user
         $pass = password_verify($log_pass, $res["password"]);
         if ($pass == true)
             {
-                $query_username = 'SELECT username FROM users WHERE email="'.$log_email.'"';
+                $query_username = 'SELECT username, is_admin FROM users WHERE email="'.$log_email.'"';
                 $res = tools::_query($pdo, $query_username);       
-                $_SESSION["name"] = $res["username"];
+                $_SESSION["name"] = $res["username"];       
+                $_SESSION["is_admin"] = $res["is_admin"];
                 $erreur = 0;
                 return $erreur;
             }
@@ -80,10 +81,9 @@ class user
         tools::_query($pdo, $query_insert);
         $_SESSION["name"] = $_POST["name"];
     }
-    function get_user()
+    function get_user_admin($pdo)
     {
         $query_get = ('SELECT id, username, email, password, is_admin FROM users');
-        $pdo = tools::connect_db();
         $res = tools::_query_all($pdo, $query_get);
         foreach ($res as $value)
             {
@@ -93,8 +93,11 @@ class user
 </tr></table>";
             }
     }
-    function get_user_info()
+    function get_user_user($pdo)
     {
+        $query_get = ('SELECT id, username, email FROM users');
+        $res = tools::_query($pdo, $query_get);
+        echo "<table><tr><td> user: ".$res["username"]."</td><td>email: </td><td>".$res["email"]."</td></tr></table>";
     }
     function add_user($pdo)
     {
@@ -112,49 +115,6 @@ class user
     function delete_user($pdo)
     {
         $query_delete = ('DELETE FROM users WHERE id='.$_GET["id"]);
-        tools::_query($pdo, $query_delete);
-    }
-    function get_product()
-    {
-        $query_get = ('SELECT id, name, description, price, user_id, category_id FROM products');
-        $pdo = tools::connect_db();
-        $res = tools::_query_all($pdo, $query_get);
-        
-        foreach ($res as $value)
-            {
-                echo "<table><tr><td> name: </td><td>".$value["name"]. "</td><td>price: </td><td>".$value["price"]."</td><td> description:</td><td>".$value["description"]."</td>
-<td><a href='http://coding_academy.com/pool_php_rush/update_product.php?id=".$value["id"]."'>Update</a></td>
-<td><a href='http://coding_academy.com/pool_php_rush/delete_product.php?id=".$value["id"]."'>Delete</a></td>
-</tr></table>";
-            }
-    }
-    function get_product_info()
-    {
-        $query_get = ('SELECT id, name, description, price, user_id, category_id FROM products');
-        $pdo = tools::connect_db();
-        $res = tools::_query_all($pdo, $query_get);
-        
-        foreach ($res as $value)
-            {
-                echo "<table><tr><td> name: </td><td>".$value["name"]. "</td><td>price: </td><td>".$value["price"]."</td><td> description:</td><td>".$value["description"]."</td></tr></table>";
-            }
-    }
-    
-    function add_product($pdo)
-    {
-        $query_set = ('INSERT INTO products (name, price, description) VALUES ("'.$_POST["name"].'", "'.$_POST["price"].'","'.$_POST["description"].'")');
-        tools::_query($pdo, $query_set);
-    }
-
-     function update_product($pdo)
-    {
-        $id = substr_replace($_POST["id"], "", -1);
-        $query_update = ('UPDATE products SET name="'.$_POST["name"].'", price="'.$_POST["price"].'", description="'.$_POST["description"].'" WHERE id='.$id);
-        tools::_query($pdo, $query_update);    
-    }
-    function delete_product($pdo)
-    {
-        $query_delete = ('DELETE FROM products WHERE id='.$_GET["id"]);
         tools::_query($pdo, $query_delete);
     }
 }

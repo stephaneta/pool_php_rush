@@ -4,8 +4,9 @@
 <body>
 
 <?php
-include_once("tools.php");
 include_once("user.php");
+include_once("product.php");
+include_once("category.php");
 session_start();
 
 if ($_SESSION["name"] == null)
@@ -24,7 +25,11 @@ if ($res["is_admin"] == 1)
 <?php
     }
 else
-    user::get_product_info();
+    {
+        //user::get_user_user($pdo);
+        product::get_product_user();
+        category::get_category_user($pdo);
+    }
 ?>
 <form action="index.php" method="post">
      <p><input type="submit" name="logout" value="Log out" ></p>
