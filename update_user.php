@@ -21,3 +21,4 @@ if (user::verify_info() == 0)
     <p><input type="hidden" name="id" value=<?php echo $_GET["id"];?>/></p>
         <p><input type="submit" value="OK" ></p>
         </form>
+    <a href="http://coding_academy.com/pool_php_rush/admin.php"> Back  </a><br>

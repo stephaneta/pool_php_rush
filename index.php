@@ -5,6 +5,7 @@
 
 <?php
 include_once("tools.php");
+include_once("user.php");
 session_start();
 
 if ($_SESSION["name"] == null)
@@ -22,6 +23,8 @@ if ($res["is_admin"] == 1)
      </form>
 <?php
     }
+else
+    user::get_product_info();
 ?>
 <form action="index.php" method="post">
      <p><input type="submit" name="logout" value="Log out" ></p>

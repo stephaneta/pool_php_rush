@@ -93,6 +93,9 @@ class user
 </tr></table>";
             }
     }
+    function get_user_info()
+    {
+    }
     function add_user($pdo)
     {
         $new_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
@@ -125,19 +128,28 @@ class user
 </tr></table>";
             }
     }
-
+    function get_product_info()
+    {
+        $query_get = ('SELECT id, name, description, price, user_id, category_id FROM products');
+        $pdo = tools::connect_db();
+        $res = tools::_query_all($pdo, $query_get);
+        
+        foreach ($res as $value)
+            {
+                echo "<table><tr><td> name: </td><td>".$value["name"]. "</td><td>price: </td><td>".$value["price"]."</td><td> description:</td><td>".$value["description"]."</td></tr></table>";
+            }
+    }
     
     function add_product($pdo)
     {
-        $query_set = ('INSERT INTO products (name, price) VALUES ("'. $_POST["name"].'", "'.$_POST["price"].'"');
-        var_dump(tools::_query($pdo, $query_set)); 
+        $query_set = ('INSERT INTO products (name, price, description) VALUES ("'.$_POST["name"].'", "'.$_POST["price"].'","'.$_POST["description"].'")');
+        tools::_query($pdo, $query_set);
     }
 
      function update_product($pdo)
     {
-        /* $id = substr_replace($_POST["id"], "", -1); */
-        /* $new_password = password_hash($_POST["password"], PASSWORD_DEFAULT); */
-        $query_update = ('UPDATE product SET name="'.$_POST["name"].'", price="'.$_POST["price"].'", description="'.$_POST["description"].'" WHERE id='.$_POST["id"]);
+        $id = substr_replace($_POST["id"], "", -1);
+        $query_update = ('UPDATE products SET name="'.$_POST["name"].'", price="'.$_POST["price"].'", description="'.$_POST["description"].'" WHERE id='.$id);
         tools::_query($pdo, $query_update);    
     }
     function delete_product($pdo)

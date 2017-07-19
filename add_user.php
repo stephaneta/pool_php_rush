@@ -24,5 +24,6 @@ else
             
 <?php
     }
-
 ?>
+
+<a href="http://coding_academy.com/pool_php_rush/admin.php"> Back  </a><br>
